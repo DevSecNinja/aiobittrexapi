@@ -2,7 +2,7 @@ import asyncio
 import pytest
 from typing import Optional
 
-from aiobittrexapi.api import BittrexAPI
+from aiobittrexapi import Bittrex
 from aiobittrexapi.errors import (
     BittrexApiError,
     BittrexResponseError,
@@ -22,9 +22,9 @@ async def test_get_markets(
     """
 
     if api_key and api_secret:
-        api = BittrexAPI(api_key, api_secret)
+        api = Bittrex(api_key, api_secret)
     else:
-        api = BittrexAPI()
+        api = Bittrex()
 
     try:
         # Get the active markets from Bittrex - works without secret & key
@@ -56,9 +56,9 @@ async def test_get_account(
     """
 
     if api_key and api_secret:
-        api = BittrexAPI(api_key, api_secret)
+        api = Bittrex(api_key, api_secret)
     else:
-        api = BittrexAPI()
+        api = Bittrex()
 
     try:
         await api.get_account()
