@@ -48,6 +48,6 @@ setup(
     name="aiobittrexapi",
     packages=find_packages(include=["aiobittrexapi"]),
     url="https://github.com/DevSecNinja/aiobittrexapi",
-    version="0.1.2",
+    version="1.0.0",
     zip_safe=False,
 )
