@@ -26,8 +26,8 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov=aiobittrexapi --cov-report=xml
-    # - name: Send Codecov results
-    #   uses: codecov/codecov-action@v1
-    #   with:
-    #     token: ${{ secrets.CODECOV_UPLOAD_TOKEN }}
-    #     fail_ci_if_error: true
+    - name: Send Codecov results
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_UPLOAD_TOKEN }}
+        fail_ci_if_error: true
