@@ -1,1 +1,1 @@
-"""Fetch data from the Bittrex API"""
+"""Initialize aiobittrexapi."""

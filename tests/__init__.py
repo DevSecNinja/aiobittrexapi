@@ -1,1 +1,1 @@
-"""Test fetching the Bittrex API."""
+"""Initialize tests for aiobittrexapi."""

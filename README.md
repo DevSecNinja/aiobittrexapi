@@ -4,7 +4,11 @@ This package is used by the Bittrex integration of Home Assistant.
 
 ## Example
 
-To be added
+View the example code in `example.py`.
+
+## Feedback & Pull Requests
+
+All feedback and Pull Requests are welcome!
 
 ## Development
 

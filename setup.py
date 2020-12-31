@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """The package setup script."""
 import os
-import re
 import sys
 
 from setuptools import find_packages, setup
@@ -33,8 +32,16 @@ setup(
     ],
     description="Asynchronous Python wrapper for the Bittrex API.",
     include_package_data=True,
-    install_requires=["aiohttp>=3.0.0"],
-    keywords=["bittrex", "bittrex-api", "bittrex-v3", "cryptocurrency", "api", "async", "client"],
+    install_requires=["aiohttp>=3.0.0", "asyncio-throttle>=0.1.1"],
+    keywords=[
+        "bittrex",
+        "bittrex-api",
+        "bittrex-v3",
+        "cryptocurrency",
+        "api",
+        "async",
+        "client",
+    ],
     license="MIT license",
     long_description_content_type="text/markdown",
     long_description=readme,
