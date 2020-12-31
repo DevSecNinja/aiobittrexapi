@@ -2,6 +2,10 @@
 
 This package is used by the Bittrex integration of Home Assistant.
 
+![Python Tests](https://github.com/DevSecNinja/aiobittrexapi/workflows/Python%20Tests/badge.svg)
+![Upload Python Package](https://github.com/DevSecNinja/aiobittrexapi/workflows/Upload%20Python%20Package/badge.svg)
+[![codecov](https://codecov.io/gh/DevSecNinja/aiobittrexapi/branch/main/graph/badge.svg?token=938OECIJ6W)](https://codecov.io/gh/DevSecNinja/aiobittrexapi)
+
 ## Example
 
 ```` python
