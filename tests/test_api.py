@@ -1,4 +1,3 @@
-import asyncio
 import pytest
 from typing import Optional
 
@@ -15,7 +14,7 @@ API_SECRET = ""
 
 @pytest.mark.asyncio
 async def test_get_markets(
-    api_key: Optional[str] = None, api_secret: Optional[str] = None
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
 ):
     """
     Test gathering the markets
@@ -49,7 +48,7 @@ async def test_get_markets(
 
 @pytest.mark.asyncio
 async def test_get_tickers(
-    api_key: Optional[str] = None, api_secret: Optional[str] = None
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
 ):
     """
     Test gathering the market tickers
@@ -81,11 +80,11 @@ async def test_get_tickers(
 
 
 @pytest.mark.asyncio
-async def test_get_account(
-    api_key: Optional[str] = None, api_secret: Optional[str] = None
+async def test_get_two_tickers(
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
 ):
     """
-    Test gathering account info
+    Test gathering two of the market tickers
     """
 
     if api_key and api_secret:
@@ -94,22 +93,123 @@ async def test_get_account(
         api = Bittrex()
 
     try:
-        await api.get_account()
-        assert False
-    except BittrexInvalidAuthentication:
-        assert True
+        # Get the active markets from Bittrex - works without secret & key
+        symbols = ["BTC-USDT", "DGB-USDT"]
+        testEntries = await api.get_tickers(symbol=symbols)
+
+        assert testEntries[0]["symbol"] == "BTC-USDT"
+        assert testEntries[0]["lastTradeRate"]
+        assert testEntries[0]["bidRate"]
+        assert testEntries[0]["askRate"]
+
+        assert testEntries[1]["symbol"] == "DGB-USDT"
+        assert testEntries[1]["lastTradeRate"]
+        assert testEntries[1]["bidRate"]
+        assert testEntries[1]["askRate"]
+    except BittrexApiError as e:
+        print(e)
+    except BittrexResponseError as e:
+        print("Invalid response:", e)
     finally:
         await api.close()
 
 
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
+@pytest.mark.asyncio
+async def test_get_account(
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
+):
+    """
+    Test gathering account info. Exception must be thrown without API details
+    """
 
-    if API_KEY and API_SECRET:
-        loop.run_until_complete(test_get_markets(API_KEY, API_SECRET))
-        loop.run_until_complete(test_get_account(API_KEY, API_SECRET))
-        loop.run_until_complete(test_get_tickers(API_KEY, API_SECRET))
+    if api_key and api_secret:
+        api = Bittrex(api_key, api_secret)
+
+        try:
+            testEntries = await api.get_account()
+            assert testEntries["accountId"]
+        except BittrexInvalidAuthentication:
+            print("Invalid authentication while API_KEY and API_SECRET were provided!")
+            assert False
+        finally:
+            await api.close()
     else:
-        loop.run_until_complete(test_get_markets())
-        loop.run_until_complete(test_get_account())
-        loop.run_until_complete(test_get_tickers())
+        api = Bittrex()
+
+        try:
+            await api.get_account()
+            assert False
+        except BittrexInvalidAuthentication:
+            assert True
+        finally:
+            await api.close()
+
+
+@pytest.mark.asyncio
+async def test_get_open_orders(
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
+):
+    """
+    Test gathering open orders. Exception must be thrown without API details
+    """
+
+    if api_key and api_secret:
+        api = Bittrex(api_key, api_secret)
+
+        try:
+            testEntries = await api.get_open_orders()
+            assert testEntries[0]["id"]
+            assert testEntries[0]["marketSymbol"]
+            assert testEntries[0]["direction"]
+            assert testEntries[0]["type"]
+            assert testEntries[0]["quantity"]
+        except BittrexInvalidAuthentication:
+            print("Invalid authentication while API_KEY and API_SECRET were provided!")
+            assert False
+        finally:
+            await api.close()
+    else:
+        api = Bittrex()
+
+        try:
+            await api.get_open_orders()
+            assert False
+        except BittrexInvalidAuthentication:
+            assert True
+        finally:
+            await api.close()
+
+
+@pytest.mark.asyncio
+async def test_get_closed_orders(
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
+):
+    """
+    Test gathering closed orders. Exception must be thrown without API details
+    """
+
+    if api_key and api_secret:
+        api = Bittrex(api_key, api_secret)
+
+        try:
+            testEntries = await api.get_closed_orders()
+            assert testEntries[0]["id"]
+            assert testEntries[0]["marketSymbol"]
+            assert testEntries[0]["direction"]
+            assert testEntries[0]["type"]
+            assert testEntries[0]["quantity"]
+        except BittrexInvalidAuthentication:
+            print("Invalid authentication while API_KEY and API_SECRET were provided!")
+            assert False
+        finally:
+            await api.close()
+    else:
+        api = Bittrex()
+
+        try:
+            await api.get_closed_orders()
+            assert False
+        except BittrexInvalidAuthentication:
+            assert True
+        finally:
+            await api.close()

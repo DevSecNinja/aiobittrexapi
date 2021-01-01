@@ -99,14 +99,30 @@ class Bittrex:
             if response_json["code"] == "APIKEY_INVALID":
                 raise BittrexInvalidAuthentication
 
-    def get_markets(self):
+    async def get_markets(self):
         """Get the open and available trading markets at Bittrex."""
-        return self._request(path="markets")
+        return await self._request(path="markets")
 
-    def get_tickers(self):
+    async def get_tickers(self, symbol: Optional[dict] = None):
         """Get the market tickers from Bittrex."""
-        return self._request(path="markets/tickers")
+        if not symbol:
+            return await self._request(path="markets/tickers")
+        else:
+            tickers = await self._request(path="markets/tickers")
+            results = []
 
-    def get_account(self):
+            for sym in symbol:
+                results.append(next(item for item in tickers if item["symbol"] == sym))
+            return results
+
+    async def get_account(self):
         """Get account info."""
-        return self._request(path="account")
+        return await self._request(path="account")
+
+    async def get_open_orders(self):
+        """Get open orders."""
+        return await self._request(path="orders/open")
+
+    async def get_closed_orders(self):
+        """Get closed orders."""
+        return await self._request(path="orders/closed")
