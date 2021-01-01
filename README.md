@@ -2,6 +2,7 @@
 
 This package is used by the Bittrex integration of Home Assistant.
 
+[![PyPI version](https://badge.fury.io/py/aiobittrexapi.svg)](https://badge.fury.io/py/aiobittrexapi)
 ![Python Tests](https://github.com/DevSecNinja/aiobittrexapi/workflows/Python%20Tests/badge.svg)
 ![Upload Python Package](https://github.com/DevSecNinja/aiobittrexapi/workflows/Upload%20Python%20Package/badge.svg)
 [![codecov](https://codecov.io/gh/DevSecNinja/aiobittrexapi/branch/main/graph/badge.svg?token=938OECIJ6W)](https://codecov.io/gh/DevSecNinja/aiobittrexapi)
@@ -33,6 +34,10 @@ async def main(api_key: Optional[str] = None, api_secret: Optional[str] = None):
         # Get the active markets from Bittrex - works without secret & key
         markets = await api.get_markets()
         print(markets)
+
+        # Get the tickers
+        tickers = await api.get_tickers()
+        print(tickers)
 
         # Get your account data - requires secret & key
         account = await api.get_account()

@@ -103,6 +103,10 @@ class Bittrex:
         """Get the open and available trading markets at Bittrex."""
         return self._request(path="markets")
 
+    def get_tickers(self):
+        """Get the market tickers from Bittrex."""
+        return self._request(path="markets/tickers")
+
     def get_account(self):
         """Get account info."""
         return self._request(path="account")
