@@ -103,7 +103,7 @@ class Bittrex:
         """Get the open and available trading markets at Bittrex."""
         return await self._request(path="markets")
 
-    async def get_tickers(self, symbol: Optional[dict] = None):
+    async def get_tickers(self, symbol: Optional[list] = None):
         """Get the market tickers from Bittrex."""
         if not symbol:
             return await self._request(path="markets/tickers")
