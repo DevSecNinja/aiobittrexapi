@@ -105,15 +105,21 @@ class Bittrex:
 
     async def get_tickers(self, symbol: Optional[list] = None):
         """Get the market tickers from Bittrex."""
-        if not symbol:
-            return await self._request(path="markets/tickers")
-        else:
-            tickers = await self._request(path="markets/tickers")
-            results = []
+        tickers = await self._request(path="markets/tickers")
+        results = {}
 
-            for sym in symbol:
-                results.append(next(item for item in tickers if item["symbol"] == sym))
-            return results
+        if not symbol:
+            symbol = []
+            for ticker in tickers:
+                symbol.append(ticker["symbol"])
+
+        for sym in symbol:
+            if sym not in results:
+                results[sym] = {}
+                details = next(item for item in tickers if item["symbol"] == sym)
+                results[sym].update(details)
+
+        return results
 
     async def get_account(self):
         """Get account info."""

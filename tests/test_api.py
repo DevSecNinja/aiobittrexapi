@@ -61,16 +61,12 @@ async def test_get_tickers(
 
     try:
         # Get the active markets from Bittrex - works without secret & key
-        testEntries = []
         tickers = await api.get_tickers()
-        for ticker in tickers:
-            if ticker["symbol"] == "BTC-USDT":
-                testEntries.append(ticker)
 
-        assert testEntries[0]["symbol"] == "BTC-USDT"
-        assert testEntries[0]["lastTradeRate"]
-        assert testEntries[0]["bidRate"]
-        assert testEntries[0]["askRate"]
+        assert tickers["BTC-USDT"]["symbol"] == "BTC-USDT"
+        assert tickers["BTC-USDT"]["lastTradeRate"]
+        assert tickers["BTC-USDT"]["bidRate"]
+        assert tickers["BTC-USDT"]["askRate"]
     except BittrexApiError as e:
         print(e)
     except BittrexResponseError as e:
@@ -97,15 +93,15 @@ async def test_get_two_tickers(
         symbols = ["BTC-USDT", "DGB-USDT"]
         testEntries = await api.get_tickers(symbol=symbols)
 
-        assert testEntries[0]["symbol"] == "BTC-USDT"
-        assert testEntries[0]["lastTradeRate"]
-        assert testEntries[0]["bidRate"]
-        assert testEntries[0]["askRate"]
+        assert testEntries["BTC-USDT"]["symbol"] == "BTC-USDT"
+        assert testEntries["BTC-USDT"]["lastTradeRate"]
+        assert testEntries["BTC-USDT"]["bidRate"]
+        assert testEntries["BTC-USDT"]["askRate"]
 
-        assert testEntries[1]["symbol"] == "DGB-USDT"
-        assert testEntries[1]["lastTradeRate"]
-        assert testEntries[1]["bidRate"]
-        assert testEntries[1]["askRate"]
+        assert testEntries["DGB-USDT"]["symbol"] == "DGB-USDT"
+        assert testEntries["DGB-USDT"]["lastTradeRate"]
+        assert testEntries["DGB-USDT"]["bidRate"]
+        assert testEntries["DGB-USDT"]["askRate"]
     except BittrexApiError as e:
         print(e)
     except BittrexResponseError as e:
