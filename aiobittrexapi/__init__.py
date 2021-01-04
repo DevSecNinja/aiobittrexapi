@@ -1,21 +1,20 @@
 """Interacts with the Bittrex API."""
 import asyncio
 from asyncio import AbstractEventLoop
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 import aiohttp
 from asyncio_throttle import Throttler
 
 from .const import API_URL
-
 from .errors import (
-    BittrexResponseError,
     BittrexApiError,
-    BittrexRestError,
     BittrexInvalidAuthentication,
+    BittrexResponseError,
+    BittrexRestError,
 )
 
-from .utils import get_nonce, get_digest, get_signature, compose_url
+from .utils import compose_url, get_digest, get_nonce, get_signature
 
 
 class Bittrex:
@@ -85,7 +84,7 @@ class Bittrex:
         except aiohttp.ContentTypeError:
             raise BittrexResponseError(response.status, await response.text())
         except Exception as e:
-            raise BittrexRestError(e)
+            raise BittrexRestError("Unknown exception: %s", e)
         else:
             self._raise_if_error(response_json)
             return response_json

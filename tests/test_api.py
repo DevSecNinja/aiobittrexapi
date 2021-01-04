@@ -1,14 +1,13 @@
-import pytest
+import logging
 from typing import Optional
 
+import pytest
 from aiobittrexapi import Bittrex
 from aiobittrexapi.errors import (
     BittrexApiError,
-    BittrexResponseError,
     BittrexInvalidAuthentication,
+    BittrexResponseError,
 )
-
-import logging
 
 API_KEY = ""
 API_SECRET = ""
@@ -44,9 +43,9 @@ async def test_get_markets(
         assert testEntries[0]["status"] == "ONLINE"
         assert testEntries[0]["createdAt"] == "2015-12-11T06:31:40.633Z"
     except BittrexApiError as e:
-        logging.error(e)
+        logging.error("Bittrex API Error: %s", e)
     except BittrexResponseError as e:
-        logging.error("Invalid response:", e)
+        logging.error("Invalid response: %s", e)
     finally:
         await api.close()
 
@@ -73,9 +72,9 @@ async def test_get_tickers(
         assert tickers["BTC-USDT"]["bidRate"]
         assert tickers["BTC-USDT"]["askRate"]
     except BittrexApiError as e:
-        logging.error(e)
+        logging.error("Bittrex API Error: %s", e)
     except BittrexResponseError as e:
-        logging.error("Invalid response:", e)
+        logging.error("Invalid response: %s", e)
     finally:
         await api.close()
 
@@ -108,9 +107,9 @@ async def test_get_two_tickers(
         assert testEntries["DGB-USDT"]["bidRate"]
         assert testEntries["DGB-USDT"]["askRate"]
     except BittrexApiError as e:
-        logging.error(e)
+        logging.error("Bittrex API Error: %s", e)
     except BittrexResponseError as e:
-        logging.error("Invalid response:", e)
+        logging.error("Invalid response: %s", e)
     finally:
         await api.close()
 
