@@ -8,8 +8,13 @@ from aiobittrexapi.errors import (
     BittrexInvalidAuthentication,
 )
 
+import logging
+
 API_KEY = ""
 API_SECRET = ""
+
+if not API_KEY or not API_SECRET:
+    logging.warning("As no API key and secret is provided, we cannot execute all tests")
 
 
 @pytest.mark.asyncio
@@ -39,9 +44,9 @@ async def test_get_markets(
         assert testEntries[0]["status"] == "ONLINE"
         assert testEntries[0]["createdAt"] == "2015-12-11T06:31:40.633Z"
     except BittrexApiError as e:
-        print(e)
+        logging.error(e)
     except BittrexResponseError as e:
-        print("Invalid response:", e)
+        logging.error("Invalid response:", e)
     finally:
         await api.close()
 
@@ -68,9 +73,9 @@ async def test_get_tickers(
         assert tickers["BTC-USDT"]["bidRate"]
         assert tickers["BTC-USDT"]["askRate"]
     except BittrexApiError as e:
-        print(e)
+        logging.error(e)
     except BittrexResponseError as e:
-        print("Invalid response:", e)
+        logging.error("Invalid response:", e)
     finally:
         await api.close()
 
@@ -103,9 +108,9 @@ async def test_get_two_tickers(
         assert testEntries["DGB-USDT"]["bidRate"]
         assert testEntries["DGB-USDT"]["askRate"]
     except BittrexApiError as e:
-        print(e)
+        logging.error(e)
     except BittrexResponseError as e:
-        print("Invalid response:", e)
+        logging.error("Invalid response:", e)
     finally:
         await api.close()
 
@@ -125,7 +130,9 @@ async def test_get_account(
             testEntries = await api.get_account()
             assert testEntries["accountId"]
         except BittrexInvalidAuthentication:
-            print("Invalid authentication while API_KEY and API_SECRET were provided!")
+            logging.error(
+                "Invalid authentication while API_KEY and API_SECRET were provided!"
+            )
             assert False
         finally:
             await api.close()
@@ -134,6 +141,81 @@ async def test_get_account(
 
         try:
             await api.get_account()
+            assert False
+        except BittrexInvalidAuthentication:
+            assert True
+        finally:
+            await api.close()
+
+
+@pytest.mark.asyncio
+async def test_get_balances(
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
+):
+    """
+    Test gathering balances. Exception must be thrown without API details
+    """
+
+    if api_key and api_secret:
+        api = Bittrex(api_key, api_secret)
+
+        # Get the active markets from Bittrex - works without secret & key
+        balances = ["DGB", "USDT"]
+        testEntries = await api.get_balances(symbol=balances)
+
+        assert testEntries["USDT"]["currencySymbol"] == "USDT"
+        assert float(testEntries["USDT"]["total"]) > 0
+        assert float(testEntries["USDT"]["available"]) > 0
+        assert testEntries["USDT"]["updatedAt"]
+
+        assert testEntries["DGB"]["currencySymbol"] == "DGB"
+        assert float(testEntries["DGB"]["total"]) > 0
+        assert float(testEntries["DGB"]["available"]) > 0
+        assert testEntries["DGB"]["updatedAt"]
+
+        await api.close()
+    else:
+        api = Bittrex()
+
+        try:
+            await api.get_balances()
+            assert False
+        except BittrexInvalidAuthentication:
+            assert True
+        finally:
+            await api.close()
+
+
+@pytest.mark.asyncio
+async def test_get_two_balances(
+    api_key: Optional[str] = API_KEY, api_secret: Optional[str] = API_SECRET
+):
+    """
+    Test gathering balances. Exception must be thrown without API details
+    """
+
+    if api_key and api_secret:
+        api = Bittrex(api_key, api_secret)
+
+        # Get the active markets from Bittrex - works without secret & key
+        testEntries = await api.get_balances()
+
+        assert testEntries["USDT"]["currencySymbol"] == "USDT"
+        assert float(testEntries["USDT"]["total"]) > 0
+        assert float(testEntries["USDT"]["available"]) > 0
+        assert testEntries["USDT"]["updatedAt"]
+
+        assert testEntries["DGB"]["currencySymbol"] == "DGB"
+        assert float(testEntries["DGB"]["total"]) > 0
+        assert float(testEntries["DGB"]["available"]) > 0
+        assert testEntries["DGB"]["updatedAt"]
+
+        await api.close()
+    else:
+        api = Bittrex()
+
+        try:
+            await api.get_balances()
             assert False
         except BittrexInvalidAuthentication:
             assert True
@@ -154,13 +236,18 @@ async def test_get_open_orders(
 
         try:
             testEntries = await api.get_open_orders()
-            assert testEntries[0]["id"]
-            assert testEntries[0]["marketSymbol"]
-            assert testEntries[0]["direction"]
-            assert testEntries[0]["type"]
-            assert testEntries[0]["quantity"]
+            if testEntries:
+                assert testEntries[0]["id"]
+                assert testEntries[0]["marketSymbol"]
+                assert testEntries[0]["direction"]
+                assert testEntries[0]["type"]
+                assert testEntries[0]["quantity"]
+            else:
+                logging.warning("No open orders found so function cannot be tested")
         except BittrexInvalidAuthentication:
-            print("Invalid authentication while API_KEY and API_SECRET were provided!")
+            logging.error(
+                "Invalid authentication while API_KEY and API_SECRET were provided!"
+            )
             assert False
         finally:
             await api.close()
@@ -189,13 +276,18 @@ async def test_get_closed_orders(
 
         try:
             testEntries = await api.get_closed_orders()
-            assert testEntries[0]["id"]
-            assert testEntries[0]["marketSymbol"]
-            assert testEntries[0]["direction"]
-            assert testEntries[0]["type"]
-            assert testEntries[0]["quantity"]
+            if testEntries:
+                assert testEntries[0]["id"]
+                assert testEntries[0]["marketSymbol"]
+                assert testEntries[0]["direction"]
+                assert testEntries[0]["type"]
+                assert testEntries[0]["quantity"]
+            else:
+                logging.warning("No open orders found so function cannot be tested")
         except BittrexInvalidAuthentication:
-            print("Invalid authentication while API_KEY and API_SECRET were provided!")
+            logging.error(
+                "Invalid authentication while API_KEY and API_SECRET were provided!"
+            )
             assert False
         finally:
             await api.close()

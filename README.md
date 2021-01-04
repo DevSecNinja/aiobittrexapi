@@ -7,6 +7,23 @@ This package is used by the Bittrex integration of Home Assistant.
 ![Upload Python Package](https://github.com/DevSecNinja/aiobittrexapi/workflows/Upload%20Python%20Package/badge.svg)
 [![codecov](https://codecov.io/gh/DevSecNinja/aiobittrexapi/branch/main/graph/badge.svg?token=938OECIJ6W)](https://codecov.io/gh/DevSecNinja/aiobittrexapi)
 
+## Available functions
+
+The following functions are available:
+
+```` python
+from aiobittrexapi import Bittrex
+api = Bittrex(api_key, api_secret)
+
+api.get_account()
+api.get_balances()
+api.get_closed_orders()
+api.get_markets()
+api.get_open_orders()
+api.get_tickers()
+
+````
+
 ## Example
 
 ```` python

@@ -94,10 +94,12 @@ class Bittrex:
     def _raise_if_error(response_json: Dict) -> None:
         """Raise if response is not expected."""
         if not response_json:
-            raise BittrexApiError(response_json.get("message"))
+            return None
         if "code" in response_json:
             if response_json["code"] == "APIKEY_INVALID":
                 raise BittrexInvalidAuthentication
+            else:
+                raise BittrexApiError(response_json.get("message"))
 
     async def get_markets(self):
         """Get the open and available trading markets at Bittrex."""
@@ -117,6 +119,26 @@ class Bittrex:
             if sym not in results:
                 results[sym] = {}
                 details = next(item for item in tickers if item["symbol"] == sym)
+                results[sym].update(details)
+
+        return results
+
+    async def get_balances(self, symbol: Optional[list] = None):
+        """Get account balances from Bittrex."""
+        balances = await self._request(path="balances")
+        results = {}
+
+        if not symbol:
+            symbol = []
+            for balance in balances:
+                symbol.append(balance["currencySymbol"])
+
+        for sym in symbol:
+            if sym not in results:
+                results[sym] = {}
+                details = next(
+                    item for item in balances if item["currencySymbol"] == sym
+                )
                 results[sym].update(details)
 
         return results
