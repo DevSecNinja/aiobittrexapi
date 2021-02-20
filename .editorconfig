@@ -2,12 +2,12 @@
 indent_style = tab
 
 [*.py]
-indent_style = spaces
+indent_style = space
 
 [Dockerfile]
-indent_style = spaces
+indent_style = space
 indent_size = 4
 
 [*.{yml,yaml}]
-indent_style = spaces
+indent_style = space
 indent_size = 2
