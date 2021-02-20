@@ -48,7 +48,7 @@ async def main(api_key: Optional[str] = None, api_secret: Optional[str] = None):
         api = Bittrex()
 
     try:
-        # Get the active markets from Bittrex - works without secret & key
+        # Get the active markets from Bittrex - works mostly without secret & key
         markets = await api.get_markets()
         print(markets)
 
